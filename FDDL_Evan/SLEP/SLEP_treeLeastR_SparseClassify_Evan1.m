@@ -37,7 +37,8 @@ opts.nFlag=0;       % without normalization
 %  opts.ind(3,:) contains the corresponding weight (w_j)
 
 % opts.ind=[ [-1,-1,1]', [n1;n2;weight] [1, N1, 1]', [N1+1, N2, 0.84]'];
-   opts.ind=[ [-1,-1,1]',[1,N1,1.0401/10]',[N1+1,N2,1/10]'];
+%    opts.ind=[ [-1,-1,1]',[1,N1,1.0401/10]',[N1+1,N2,1/10]'];
+   opts.ind=[ [-1,-1,1]',[1,N1,1/10]',[N1+1,N2,0.8440/10]'];
 %    opts.ind=[-1,-1,1]';
 
 % opts.ind =ind;       % set the group indices
@@ -48,7 +49,9 @@ opts.nFlag=0;       % without normalization
 % opts.G = [1:1:size(Train_dat,2)];
 
 for i = 1:length(Test_label)
+    
     [C(:,i), funVal, ValueL]=tree_LeastR(D, Test_data(:,i), lambda, opts);
+    
 end
 
 label = zeros(1,length(Test_label));
@@ -56,6 +59,7 @@ Lt1 = (Dict_label == 1);
 Lt2 = (Dict_label == 2);
     
 for i = 1:length(Test_label)
+    
     DIf1 = (norm((Test_data(:,i)-D*(C(:,i).*Lt1')),2))^2;
     
     DIf2 = (norm((Test_data(:,i)-D*(C(:,i).*Lt2')),2))^2;

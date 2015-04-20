@@ -18,8 +18,8 @@ m   =    size(data,1);
 
 switch lower(wayInit)
     case {'pca'}
-%         [D,disc_value,Mean_Image]   =    Eigenface_f(data,nCol-1);
-        [D,disc_value,Mean_Image]   =    Eigenface_f(data,dictnums-1);
+        [D,disc_value,Mean_Image]   =    Eigenface_f(data,nCol-1);
+%         [D,disc_value,Mean_Image]   =    Eigenface_f(data,dictnums-1);
         D                           =    [D Mean_Image./norm(Mean_Image)];
     case {'random'}
         phi                         =    randn(m, nCol);

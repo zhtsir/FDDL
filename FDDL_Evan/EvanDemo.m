@@ -111,16 +111,16 @@ for j = 6:6
         Xs = Xs./repmat(sqrt(sum(Xs.^2)),size(Xs,1),1);
         
 
-% %% FDDL Parameter
-%         
-%         opts.nClass = 2;
-%         opts.wayInit = 'adjustable random';
-%         opts.dictnums = 150 ;%set the numbers of dictionary atom of each class(edit by Evan)
-%         opts.lambda1 = 0.005;
-%         opts.lambda2 = 0.5;%0.05;
-%         opts.nIter = 40;%15;
-%         opts.show = true;
-%         [Dict,Drls,CoefM,CMlabel] = FDDL(Xt,Lt,opts);
+%% FDDL Parameter
+        
+        opts.nClass = 2;
+        opts.wayInit = 'pca';
+        opts.dictnums = 150 ;%set the numbers of dictionary atom of each class(edit by Evan)
+        opts.lambda1 = 0.005;
+        opts.lambda2 = 0.05;
+        opts.nIter = 15;
+        opts.show = true;
+        [Dict,Drls,CoefM,CMlabel] = FDDL(Xt,Lt,opts);
 %         filename = strcat('GMNewDict',num2str(k));
 %         save(filename, 'Dict','Drls','CoefM','CMlabel');
      
@@ -166,8 +166,8 @@ for j = 6:6
 % %         fprintf('%s%8f\n','reco_rate  =  ',sum(ID==Ls)/(length(Ls)));
 % %         ACC(k) = sum(ID==Ls)/(length(Ls));
         %% Sparse Classification II
-            filename = strcat('GMNewDict',num2str(k));
-            load(filename);
+%             filename = strcat('GMNewDict',num2str(k));
+%             load(filename);
             lambda = [LAMBDA(j)];
 % 
 % %             [ACC(j,k),LABEL,C] = SLEP_LeastR_SparseClassify_Evan1(Dict,Drls,Xs,Ls,lambda);
