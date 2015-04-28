@@ -68,7 +68,7 @@ for ci = 1:opts.nClass
     dict          =    FDDL_INID(cdat,size(cdat,2),opts.wayInit,opts.dictnums);
 %     dict          =    FDDL_INID(cdat,min(size(cdat,1),size(cdat,2)),opts.wayInit,opts.dictnums);%edit by Evan
     Dict_ini      =    [Dict_ini dict];
-    Dlabel_ini    =    [Dlabel_ini repmat(ci,[i1 size(dct,2)])];
+    Dlabel_ini    =    [Dlabel_ini repmat(ci,[1 size(dict,2)])];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %initialize coef without between-class scatter

@@ -69,8 +69,19 @@ LAMBDA = [1,0.5,0.1,0.05,0.01,0.005,0.001,0.0005];
 for j = 6:6
     for k = 1:10
         
-        Xt = data_1(:,training(c,k));
-        Lt = datalabel(:,training(c,k));
+%         Xt = data_1(:,training(c,k));
+%         Lt = datalabel(:,training(c,k));
+        
+        Xt_1 = data_1(:,training(c,k));
+        Lt_1 = datalabel(:,training(c,k));
+        Xt_2 = data_2(:,training(c,k));
+        Lt_2 = datalabel(:,training(c,k));
+        Xt_3 = data_3(:,training(c,k));
+        Lt_3 = datalabel(:,training(c,k));
+        Xt_4 = data_4(:,training(c,k));
+        Lt_4 = datalabel(:,training(c,k));
+        Xt_5 = data_5(:,training(c,k));
+        Lt_5 = datalabel(:,training(c,k));
         
         Xs_1 = data_1(:,test(c,k));
         Ls_1 = datalabel(:,test(c,k));
@@ -83,12 +94,26 @@ for j = 6:6
         Xs_5 = data_5(:,test(c,k));
         Ls_5 = datalabel(:,test(c,k));
         
+        Xt = zeros(size(Xt_1,1),5*size(Xt_1,2));
+        Xt(:,1:5:5*(size(Xt_1,2)-1)+1) = Xt_1;
+        Xt(:,2:5:5*(size(Xt_1,2)-1)+2) = Xt_2;
+        Xt(:,3:5:5*(size(Xt_1,2)-1)+3) = Xt_3;
+        Xt(:,4:5:5*(size(Xt_1,2)-1)+4) = Xt_4;
+        Xt(:,5:5:5*(size(Xt_1,2))) = Xt_5;
+        
         Xs = zeros(size(Xs_1,1),5*size(Xs_1,2));
         Xs(:,1:5:5*(size(Xs_1,2)-1)+1) = Xs_1;
         Xs(:,2:5:5*(size(Xs_1,2)-1)+2) = Xs_2;
         Xs(:,3:5:5*(size(Xs_1,2)-1)+3) = Xs_3;
         Xs(:,4:5:5*(size(Xs_1,2)-1)+4) = Xs_4;
         Xs(:,5:5:5*(size(Xs_1,2))) = Xs_5;
+        
+        Lt = zeros(size(Lt_1,1),5*size(Lt_1,2));
+        Lt(:,1:5:5*(size(Lt_1,2)-1)+1) = Lt_1;
+        Lt(:,2:5:5*(size(Lt_1,2)-1)+2) = Lt_2;
+        Lt(:,3:5:5*(size(Lt_1,2)-1)+3) = Lt_3;
+        Lt(:,4:5:5*(size(Lt_1,2)-1)+4) = Lt_4;
+        Lt(:,5:5:5*(size(Lt_1,2))) = Lt_5;
         
         Ls = zeros(size(Ls_1,1),5*size(Ls_1,2));
         Ls(:,1:5:5*(size(Ls_1,2)-1)+1) = Ls_1;
@@ -103,24 +128,28 @@ for j = 6:6
         id_label = Ls_1;
         
         ind = find(sum(Xs,1) == 0);
+        ind2 = find(sum(Xt,1) == 0);
         Xs(:,ind) = [];
+        Xt(:,ind2) = [];
         Ls(:,ind) = [];
+        Lt(:,ind2) = [];
         id(:,ind) = [];
-        
+
+        %% Normalization
         Xt = Xt./repmat(sqrt(sum(Xt.^2)),size(Xt,1),1);
         Xs = Xs./repmat(sqrt(sum(Xs.^2)),size(Xs,1),1);
         
 
 %% FDDL Parameter
         
-        opts.nClass = 2;
-        opts.wayInit = 'pca';
-        opts.dictnums = 150 ;%set the numbers of dictionary atom of each class(edit by Evan)
-        opts.lambda1 = 0.005;
-        opts.lambda2 = 0.05;
-        opts.nIter = 15;
-        opts.show = true;
-        [Dict,Drls,CoefM,CMlabel] = FDDL(Xt,Lt,opts);
+%         opts.nClass = 2;
+%         opts.wayInit = 'random';
+%         opts.dictnums = 150 ;%set the numbers of dictionary atom of each class(edit by Evan)
+%         opts.lambda1 = 0.005;
+%         opts.lambda2 = 0.05;
+%         opts.nIter = 30;
+%         opts.show = true;
+%         [Dict,Drls,CoefM,CMlabel] = FDDL(Xt,Lt,opts);
 %         filename = strcat('GMNewDict',num2str(k));
 %         save(filename, 'Dict','Drls','CoefM','CMlabel');
      
@@ -172,6 +201,7 @@ for j = 6:6
 % 
 % %             [ACC(j,k),LABEL,C] = SLEP_LeastR_SparseClassify_Evan1(Dict,Drls,Xs,Ls,lambda);
 % %             [ACC(j,k),LABEL,C] = SLEP_sgLeastR_SparseClassify_Evan1(Dict,Drls,Xs,Ls,lambda);
-            [ACC(j,k),LABEL,C] = SLEP_treeLeastR_SparseClassify_Multime_Evan1(Dict,Drls,Xs,Ls,id,id_label,lambda);
+%             [ACC(j,k),LABEL,C] = SLEP_treeLeastR_SparseClassify_Multime_Evan1(Dict,Drls,Xs,Ls,id,id_label,lambda);
+            [ACC(j,k),LABEL,C] = SLEP_treeLeastR_SparseClassify_Multime_Evan1(Xt,Lt,Xs,Ls,id,id_label,lambda);
     end
 end

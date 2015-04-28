@@ -23,13 +23,13 @@ switch lower(wayInit)
         D                           =    [D Mean_Image./norm(Mean_Image)];
     case {'random'}
         phi                         =    randn(m, nCol);
-        phinorm                     =    sqrt(sum(phi.*phi, 2));
-        D                           =    phi ./ repmat(phinorm, 1, nCol);
+        phinorm                     =    sqrt(sum(phi.*phi, 1));
+        D                           =    phi ./ repmat(phinorm, m, 1);
     case {'adjustable random'}
 %         index                       =    randi(nCol,atomnums);    
         phi                         =    randn(m, dictnums);
-        phinorm                     =    sqrt(sum(phi.*phi, 2));
-        D                           =    phi ./ repmat(phinorm, 1, dictnums);        
+        phinorm                     =    sqrt(sum(phi.*phi, 1));
+        D                           =    phi ./ repmat(phinorm, m, 1);        
     otherwise 
         error{'Unkonw method.'}
 end
