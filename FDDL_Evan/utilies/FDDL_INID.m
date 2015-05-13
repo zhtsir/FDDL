@@ -14,7 +14,7 @@ function D    =    FDDL_INID(data,nCol,wayInit,dictnums)
 %
 %------------------------------------------------------------------------
 
-m   =    size(data,1);
+[m,n]   =    size(data);
 
 switch lower(wayInit)
     case {'pca'}
@@ -22,9 +22,15 @@ switch lower(wayInit)
 %         [D,disc_value,Mean_Image]   =    Eigenface_f(data,dictnums-1);
         D                           =    [D Mean_Image./norm(Mean_Image)];
     case {'random'}
-        phi                         =    randn(m, nCol);
-        phinorm                     =    sqrt(sum(phi.*phi, 1));
-        D                           =    phi ./ repmat(phinorm, m, 1);
+        vector = randperm(n);
+        D = zeros(m,dictnums);
+        for i = 1:dictnums
+            D(:,i) = data(:,vector(i));
+        end
+        D = D./repmat(sqrt(sum(D.*D,1)),m,1);
+%         phi                         =    randn(m, nCol);
+%         phinorm                     =    sqrt(sum(phi.*phi, 1));
+%         D                           =    phi ./ repmat(phinorm, m, 1);
     case {'adjustable random'}
 %         index                       =    randi(nCol,atomnums);    
         phi                         =    randn(m, dictnums);

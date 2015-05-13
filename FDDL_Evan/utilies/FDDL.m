@@ -1,4 +1,6 @@
+% function [Dict,Drls] = FDDL(TrainDat,TrainLabel,opts)
 function [Dict,Drls,CoefM,CMlabel] = FDDL(TrainDat,TrainLabel,opts)
+
 % ========================================================================
 % Fisher Discriminative Dictionary Learning (FDDL), Version 1.0
 % Copyright(c) 2011  Meng YANG, Lei Zhang, Xiangchu Feng and David Zhang
@@ -65,8 +67,8 @@ Dict_ini  =  [];
 Dlabel_ini = [];
 for ci = 1:opts.nClass
     cdat          =    TrainDat(:,TrainLabel==ci);
-    dict          =    FDDL_INID(cdat,size(cdat,2),opts.wayInit,opts.dictnums);
-%     dict          =    FDDL_INID(cdat,min(size(cdat,1),size(cdat,2)),opts.wayInit,opts.dictnums);%edit by Evan
+%     dict          =    FDDL_INID(cdat,size(cdat,2),opts.wayInit,opts.dictnums);
+    dict          =    FDDL_INID(cdat,min(size(cdat,1),size(cdat,2)),opts.wayInit,opts.dictnums);%edit by Evan
     Dict_ini      =    [Dict_ini dict];
     Dlabel_ini    =    [Dlabel_ini repmat(ci,[1 size(dict,2)])];
 end
@@ -112,14 +114,16 @@ end
     %updating the coefficient
     %-------------------------
     for ci = 1:opts.nClass
-        fprintf(['Updating coefficients, class: ' num2str(ci) '\n'])
+%         fprintf(['Updating coefficients, class: ' num2str(ci) '\n'])
         Fish_ipts.X         =  TrainDat(:,TrainLabel==ci);
         Fish_ipts.A         =  coef;
         Fish_par.index      =  ci; 
         [Copts]             =  FDDL_SpaCoef (Fish_ipts,Fish_par);
         coef(:,TrainLabel==ci)    =  Copts.A;
         CMlabel(ci)         =  ci;
-        CoefM = zeros(size(Copts.A,1),opts.nClass);%edit by Evan
+        if Fish_nit ~= 1 && size(CoefM,1) ~= size(Copts.A,1)
+            CoefM = zeros(size(Copts.A,1),opts.nClass);
+        end
         CoefM(:,ci)         =  mean(Copts.A,2);
     end
     [GAP_coding(Fish_nit)]  =  FDDL_FDL_Energy(TrainDat,coef,opts.nClass,Fish_par,Fish_ipts);
@@ -128,7 +132,7 @@ end
     %updating the dictionary
     %------------------------
     for ci = 1:opts.nClass
-        fprintf(['Updating dictionary, class: ' num2str(ci) '\n']);     
+%         fprintf(['Updating dictionary, class: ' num2str(ci) '\n']);     
         [Fish_ipts.D(:,drls==ci),Delt(ci).delet]= FDDL_UpdateDi (TrainDat,coef,...
             ci,opts.nClass,Fish_ipts,Fish_par);
     end
@@ -140,7 +144,7 @@ end
         if isempty(delet)
            classD = Fish_ipts.D(:,drls==ci);
            newD = [newD classD];
-           newdrls = [newdrls repmat(ci,[1 size(classD,2)])];
+           newdrls = [newdrls repmat(ci,[1 size(classD,2)])];                       
            newcoef = [newcoef; coef(drls==ci,:)];
         else
             temp = Fish_ipts.D(:,drls==ci);

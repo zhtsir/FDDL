@@ -1,4 +1,4 @@
-function [ACC,LABEL,C] = SLEP_LeastR_SparseClassify_Evan1(Dict_data,Dict_label,Test_data,Test_label,lambda)
+function [LABEL,C,DIF] = SLEP_LeastR_SparseClassify_Evan1(Dict_data,Dict_label,Test_data,Test_label,lambda)
 
 
 
@@ -39,16 +39,20 @@ for i = 1:length(Test_label)
     
     DIf2 = (norm((Test_data(:,i)-D*(C(:,i).*Lt2')),2))^2;
 
-       
+          
             if DIf1 < DIf2
                 label(i) = 1;
             else
                 label(i) = 2;
-            end         
+            end
+            
+     DIF(1,i) = DIf1;
+     DIF(2,i) = DIf2;
 end
 
 LABEL = label;
-ACC = (length(find((LABEL - Test_label == 0))))/length(Test_label);
+
+% ACC = (length(find((LABEL - Test_label == 0))))/length(Test_label);
 
 % for i = 1:length(Test_label)
 %     
